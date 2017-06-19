@@ -1,5 +1,5 @@
 
-		var serverPrefix = 'http://114.215.209.102/USee/'; // http://114.215.209.102/USee/
+		var serverPrefix = 'http://www.useeba.com/USee/'; // http://114.215.209.102/USee/  114.215.209.102
 		var footerClosed = 0;
 		
 		// TODO:  Remove Duplications	
@@ -13,19 +13,25 @@
 		  return method;
 		}
 		
+      function sendmethod(){
+      var method = serverPrefix+'sendDammu';   //  
+      return method;
+    }
+
+    // TODO REDO The send method ...
 		function send() {	
-		// var topicID = 16;
-		// var sendInfo = '{"topicid":"'+topicID+'"}';
+		var topicID = 273;
+		var sendInfo = '{"topicid":"'+topicID+'"}';
 		// alert(sendInfo);
 		
 		$.ajax({
            type: "POST",
-           url: "getdmbytopic",
+           url: serverPrefix+"getDanmubyTopic",
            dataType: "json",
            success: function (msg) {
            		alert(msg);
                if (msg) {
-                   alert("Somebody" + name + " was added in list !");
+                   alert("Somebody" + " was added in list !");
                } else {
                    alert("Cannot add to list !");
                }
@@ -85,7 +91,7 @@
 			var speedRatio =0.2
 
 			if(window_width <800) {
-					speedRatio =0.5;
+					speedRatio =0.2;
 			}
 
 			looper_time=maxLength/ speedRatio; // 
@@ -111,8 +117,8 @@
   		if (userIcon.indexOf("_") < 0){  		
   				 imgUrl = "userIcons/"+ ref.danmu[index].userId +".png"
   		}
-  		
-     	var danmu_i={'img':imgUrl,'info':convertEmoji(ref.danmu[index].messages),'speed':1};
+  		// 'img':imgUrl,
+     	var danmu_i={'info':convertEmoji(ref.danmu[index].messages),'speed':1};
         
   		$('body').barrager(danmu_i);
   		index++;

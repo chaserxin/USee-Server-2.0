@@ -22,9 +22,10 @@ import com.usee.model.Topic;
 import com.usee.model.Topicimg;
 import com.usee.service.impl.TopicImgServiceImp;
 import com.usee.service.impl.TopicServiceImpl;
+import com.usee.utils.ViewPages;
 
-import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 public class TopicController {
@@ -125,7 +126,11 @@ public class TopicController {
 		return userTopics;
 	}
 
-
+	/**
+	 * 话题搜索：可根据话题名关键词、话题ID搜索
+	 * @param keyword
+	 * @return
+	 */
 	@RequestMapping(value = "searchtopic", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public String searchtopic(@RequestBody String keyword){
@@ -246,12 +251,12 @@ public class TopicController {
 		return resultJson.toString();
     }
 
-		/**
-		 * 通过话题类型得到topics
-		 * @param typeID
-		 * @return
-		 */
-		@RequestMapping(value = "gettopicsbytype", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	/**
+	 * 通过话题类型得到topics
+	 * @param typeID
+	 * @return
+	 */
+	@RequestMapping(value = "gettopicsbytype", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public String getTopicsbyType(@RequestBody String typeID){
 		JSONObject typeJsonObject = JSONObject.fromObject(typeID);
@@ -259,15 +264,14 @@ public class TopicController {
 
 		String topic = topicService.getTopicsbyType(typeID);
 		
-		
-		
 		return topic;
 	}
-		/**
-		 * 更新话题类型    用一个包含一个或多个typeID的String加上topicTitle或者topicID
-		 * @param topictype
-		 * @return
-		 */
+	
+	/**
+	 * 更新话题类型    用一个包含一个或多个typeID的String加上topicTitle或者topicID
+	 * @param topictype
+	 * @return
+	 */
 	@RequestMapping(value = "updatetopictype", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public void updateTopicType(@RequestBody String topictype){
@@ -314,6 +318,16 @@ public class TopicController {
 		return userTopics ;
 	}
 
-	
+	/**
+	 * 获得安卓端的ViewPages的信息
+	 * @return
+	 */
+	@RequestMapping(value = "getviewpages", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public List<Map<String, String>> getViewPages() {
+		List<Map<String, String>> returnList = ViewPages.getViewPageInfo();
+		System.out.println(returnList);
+		return returnList;
+	}
 
 }

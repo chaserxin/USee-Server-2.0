@@ -18,8 +18,8 @@
 		var now=new Date(); 
 		
 		numOfYongDao = 1; // If PC MAC broswer, set to 8, mobile phone set to 6
-	    var window_height = $(window).height() - 70;
-		numOfYongDao = Math.floor( window_height / 80) +1 ;
+	    var window_height = $(window).height() - 100;
+		numOfYongDao = Math.floor( window_height / 60) +1 ;
 		
 		currentDanmu = new Array(numOfYongDao);
 		
@@ -31,23 +31,28 @@
 		var number = Math.round((Math.random())*(numOfYongDao-1)) ; //      now.getSeconds()%numOfYongDao
 
 		var time = new Date().getTime();
-		var barrager_id = 'barrage_' + time+'_YD'+number;
+		var barrager_id = barrage.id;//'barrage_' + time+'_YD'+number;
 		var id = '#' + barrager_id;
-		var div_barrager = $("<div class='barrage' id='" + barrager_id + "'></div>").appendTo($(this));
+		var div_barrager = $("<div class='barrage' id='" + barrager_id + "'></div>").appendTo($('#container'));
 		
-		var bottomHeight = 30;
+		if (window_height > 500 ){
+		var bottomHeight = 80;
+		}
+		else {
+		var bottomHeight = 60;	
+		}
 		
 		if (current_DMMRight[number] > 500) {
-			var bottom = (barrage.bottom == 0) ? Math.floor(number* window_height /numOfYongDao + bottomHeight) : barrage.bottom;
+			var bottom = (barrage.bottom == 0) ? (bottomHeight + number*bottomHeight): barrage.bottom;
 	    // TODO Avoid dup wait for the first one! 
 	    	current_DMMRight[number] = 0;
-	    	// alert("1: The Buttom is:"+bottom);
+	    
 		}
 		else { // Remove this Danmu ? or place to an empty one 
 			
 
 			if(typeof(current_DMMRight[number]) === "undefined")  {
-					bottom =  Math.floor(number* window_height /numOfYongDao + bottomHeight) ;
+					bottom =  bottomHeight + number*bottomHeight; 
 			} else 
 			{
 				for (i =0;i<numOfYongDao;i++) {
@@ -60,19 +65,21 @@
 				}
 			}
 			
-			if (time_elasped % 3 == 0) {
-				bottom = 30;
+		
+			if (time_elasped % numOfYongDao == 0) {
+				bottom = bottomHeight;
 			}
 			else {
-				bottom = 30 + window_height /numOfYongDao;
+				bottom = bottomHeight + number*bottomHeight;
 			}
+		
 
 			// alert("2: The Buttom is:"+bottom);
 		}
 
 		if (bottom > window_height) 
 				{ 
-					bottom = bottom = Math.floor((numOfYongDao-1)* window_height /numOfYongDao + bottomHeight) ;;
+					bottom = number*bottomHeight;
  
 				}
 				
@@ -234,7 +241,33 @@
 
 		$(id+'.barrage .barrage_box .close').click(function(){
 
-			$(id).remove();
+			// alert(id);
+
+			var userID = getcookie('userId');
+
+			var sendInfo = '{"action":1,"userid":"'+userID+'","danmuid":' + barrage.id + '}';
+
+			// $(id).remove();
+			$.ajax({
+		           type: "POST",
+		           url: "http://www.useeba.com/USee/updateuseraction",
+		           contentType: "application/json",
+		           dataType: "json",
+		           success: function (msg) {
+		           		alert("点赞成功");
+		               // if (msg) {
+		               //     alert("Somebody" + " was added in list !");
+		               // } else {
+		               //     alert("Cannot add to list !");
+		               // }
+		           },
+		           async : false,
+					error: function(XMLHttpRequest, textStatus, errorThrown) { 
+						
+		                    alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+		                } ,
+		           data: sendInfo
+		       });
 
 		})
 

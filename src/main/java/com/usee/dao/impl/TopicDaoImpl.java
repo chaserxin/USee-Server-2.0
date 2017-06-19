@@ -80,7 +80,7 @@ public class TopicDaoImpl implements TopicDao {
 
 	}
 
-	public List searchTopic(String keyword) {
+	public List<Topic> searchTopic(String keyword) {
 		String hql="from Topic  where title like '%"+keyword+"%'";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		return query.list();
@@ -105,7 +105,6 @@ public class TopicDaoImpl implements TopicDao {
 		String hql = "from Topic where id in(select topicID from TopicType where typeID=?)";
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		query.setString(0, typeID);
-//		query.setCacheable(true);
 		return query.list();
 	}
 

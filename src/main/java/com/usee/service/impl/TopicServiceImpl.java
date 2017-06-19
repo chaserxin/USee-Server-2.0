@@ -414,6 +414,11 @@ public class TopicServiceImpl implements TopicService {
 		Double lon = topic.getDouble("lon");
 		Double lat = topic.getDouble("lat");
 		String userid = topic.getString("userid");
+		String videourl = null;
+		
+		if(topic.has("videourl")){
+			videourl = topic.getString("videourl");
+		}
 
 		List list = new ArrayList();
 		list=topicdao.getAllTopicId();
@@ -436,49 +441,45 @@ public class TopicServiceImpl implements TopicService {
 		newtopic.setUserID(userid);
 		newtopic.setPoi(null);
 		newtopic.setCreate_time(currentTime);
+		newtopic.setVideourl(videourl);
 
 
 		//增加内容分类
 		//获取包含的话题类型,如果传入参数不含type，则为type赋默认值0，否则正常赋值并写入到topic_type表中
-//		JSONArray typeIDs;
 		if(topic.has("type")){
 			String[] typeID = topic.getString("type").split(",");
 			String type = Integer.toString(typeID.length);
-//			int type = typeIDs.size();
-			
-//			String type = "";
-//			String topicID = topicdao.addTopic(newtopic);
 			newtopic.setType(type);
 			topicdao.addTopic(newtopic);
 			
-//			String typeID[] =type.split(","); //获取typeID值
 			for(int i=0; i<typeID.length; i++){
 				TopicType newtopictype = new TopicType();
 				newtopictype.setTopicid(newid);
 				newtopictype.setTypeid(Integer.parseInt(typeID[i]));
 				topictypedao.addTopictype(newtopictype);
 			}
-			
-
 		}
 		else{
 			newtopic.setType("0");
 			topicdao.addTopic(newtopic);
 		}
-
 		return newid;
 	}
 
 
 	public String searchTopic(String keyword) {
-		List list1 = new ArrayList();
-		List<String> userTopics = new ArrayList();
+		List<Topic> list1 = new ArrayList<Topic>();
+		// 首先通过话题 ID 搜索话题
+		if(keyword.matches("[0-9]{1,}")) {
+			list1.add(topicdao.getTopic(keyword));
+		}
+		// 通过话题名称的关键词搜索话题
 		list1 = topicdao.searchTopic(keyword);
-
-		 JSONArray array = JSONArray.fromObject(list1);
-		 JSONObject object = new JSONObject();
-			object.put("topic", array.toString());
-			return object.toString();
+		
+		JSONArray array = JSONArray.fromObject(list1);
+		JSONObject object = new JSONObject();
+		object.put("topic", array.toString());
+		return object.toString();
 	}
 
     @Override
@@ -541,14 +542,13 @@ public class TopicServiceImpl implements TopicService {
 
 	public String getTopicsbyType(String typeID){
 		List<Topic> list = new ArrayList<Topic>();
-//		typeID = "%"+typeID+"%";
 		list = topicdao.getTopicsbyType(typeID);
 
 		for (Topic topic : list) {
-						// 获取话题图片
-						List<String> imgurls = topicimgDaoImp.gettopicimg(topic.getId());
-						topic.setImgurls(imgurls.toArray(new String[imgurls.size()]));
-						changeTypeOfTopic(topic);
+			// 获取话题图片
+			List<String> imgurls = topicimgDaoImp.gettopicimg(topic.getId());
+			topic.setImgurls(imgurls.toArray(new String[imgurls.size()]));
+			changeTypeOfTopic(topic);
 		}
 
 
@@ -580,13 +580,10 @@ public class TopicServiceImpl implements TopicService {
 		String type = topictypedao.getTypeOfTopic(topicID);
 		type = type.replace("[", "");
 		type = type.replace("]", "");
-//		type = """+type+""";
-//		jsonObject.
 		jsonObject.put("type", type);
 		topic.setType(type);
 		String topicStr = jsonObject.toString();
 		return topicStr;
-//		jsonObject.put("type", type);
 	}
 
 

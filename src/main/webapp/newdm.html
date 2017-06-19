@@ -36,7 +36,7 @@ table.gridtable td {
 </style>
 
   <script>
-  	var serverPrefix = 'http://114.215.209.102//USee/'; // http://114.215.209.102/USee/
+  	var serverPrefix = 'http://114.215.209.102/USee/'; // http://114.215.209.102/USee/
 		
 	function newdmmethod(){
 		  var method = serverPrefix+'getnewdanmu';   // // getdmbytopic'
@@ -52,6 +52,7 @@ table.gridtable td {
 			var data = '{"createTime":"'+beginTime +'"}';
 			jsonhttp.send(data);
 			result = jsonhttp.responseText;
+			alert(result);
 			ref =eval("("+result+")");
 			return ref;
 		}
@@ -82,7 +83,7 @@ table.gridtable td {
    function getTime() {
       return  $('#datepicker').val()
    }
-		
+
 /*		
   $(function() {
     $( "#datepicker" ).datepicker({
@@ -109,9 +110,18 @@ table.gridtable td {
           altFormat: "yy-mm-dd"
 
        }); //绑定输入框
+       
+       		
+	var data = new Array();	
+	data.push("/吃惊]|d_chijing");
+	data.push("/最右]|d_zuiyou");
+	data.push("/微笑]|d_hehe");
+	// alert(data[1]);
+			
 	}); 
 	
  	// var newDanmus = getNewDanmu(newdmmethod());
+ 	//createTable(newDanmus)
  	getTime();
 	// alert(newDanmus.result.length)
   </script>

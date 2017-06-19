@@ -1,5 +1,7 @@
 package com.usee.model;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -47,6 +49,7 @@ public class Topic {
 	@Column(length=1)
 	private int expired ;
 
+	// 该topic拥有多少个type
 	@Column(length=5)
 	private String type;
 
@@ -55,6 +58,9 @@ public class Topic {
 
 	@Transient
 	private String[] imgurls;
+	
+	@Column(length=100)
+	private String videourl;
 
 	public String getId() {
 		return id;
@@ -178,12 +184,21 @@ public class Topic {
 		this.imgurls = imgurls;
 	}
 
+	public String getVideourl() {
+		return videourl;
+	}
+
+	public void setVideourl(String videourl) {
+		this.videourl = videourl;
+	}
+
 	@Override
 	public String toString() {
 		return "Topic [id=" + id + ", title=" + title + ", description=" + description + ", lon=" + lon + ", lat=" + lat
 				+ ", radius=" + radius + ", create_time=" + create_time + ", lastDanmu_time=" + lastDanmu_time
 				+ ", userID=" + userID + ", poi=" + poi + ", danmuNum=" + danmuNum + ", expired=" + expired + ", type="
-				+ type + ", delete_time=" + delete_time + "]";
+				+ type + ", delete_time=" + delete_time + ", imgurls=" + Arrays.toString(imgurls) + ", videourl="
+				+ videourl + "]";
 	}
 
 }

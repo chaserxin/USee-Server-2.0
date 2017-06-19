@@ -22,69 +22,110 @@ import com.usee.service.TopicService;
 import com.usee.service.impl.TopicImgServiceImp;
 import com.usee.utils.DownloadURL;
 import com.usee.utils.ShareTopicUtil;
+import com.usee.utils.WebAppURL;
 
 @Controller
 public class ShareController {
-	
+
 	@Resource
 	private TopicService topicService;
 	@Autowired
 	private TopicImgServiceImp topicImgService;
 	@Autowired
 	private SqlInjectService sqlInjectService;
-	
+
 	public static String SHATR_CONTENT = "这个话题很有趣，邀请你一起来弹吧!";
-	
+
 	@ResponseBody
 	@RequestMapping("/sharetopic")
-	public Map<String, String> shareTopic(@RequestBody String json){
-		
+	public Map<String, String> shareTopic(@RequestBody String json) {
+
 		String topicId = null;
 		Map<String, String> shareMap = new HashMap<String, String>();
 		// 防注入
 		String handJson = sqlInjectService.SqlInjectHandle(json);
-		
+
 		try {
-			ObjectMapper mapper = new ObjectMapper(); 
-			Map<String,String> map = new HashMap<String, String>();
-			map = mapper.readValue(handJson, new TypeReference<Map<String, String>>(){});
+			ObjectMapper mapper = new ObjectMapper();
+			Map<String, String> map = new HashMap<String, String>();
+			map = mapper.readValue(handJson, new TypeReference<Map<String, String>>() {
+			});
 			topicId = map.get("topicId");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        
+
 		// 得到topic的信息
 		Topic topic = topicService.getTopic(topicId);
-//		String topicDescription = topic.getDescription();
+		// String topicDescription = topic.getDescription();
 		String firstTopicImg = topicImgService.getFirstTopicimg(topicId);
 		String topicTitle = topic.getTitle();
-		
-		if(firstTopicImg == null) {
+
+		if (firstTopicImg == null) {
 			firstTopicImg = "";
 		}
-		
+
 		// 使用topic信息组装成topicUrl
-		String topicUrl = ShareTopicUtil.getShareURL() 
-				+ "?topicid=" + topicId;
-		
+		String topicUrl = ShareTopicUtil.getShareURL() + "?topicid=" + topicId;
+
 		shareMap.put("topicUrl", topicUrl);
 		shareMap.put("title", topicTitle);
 		shareMap.put("shareContent", SHATR_CONTENT);
 		shareMap.put("topicImg", firstTopicImg);
-		
-		
+
 		System.out.println(shareMap);
 		return shareMap;
 	}
-	
+
 	@RequestMapping("/download")
-	public void downloadAPK(HttpServletRequest request,HttpServletResponse response){
+	public void downloadAPK(HttpServletRequest request, HttpServletResponse response) {
 		String downloadURL = DownloadURL.getDownloadURL();
 		try {
 			response.sendRedirect(downloadURL);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@RequestMapping("/androidorios")
+	public void androidOrIOS(HttpServletRequest request, HttpServletResponse response) {
+		String userAgent = request.getHeader("user-agent");
+		System.out.println(userAgent);
+		// 安卓端提供下载连接
+		if (userAgent.contains("Android")) {
+			try {
+				String downloadURL = DownloadURL.getDownloadURL();
+				response.sendRedirect(downloadURL);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else if (userAgent.contains("iPhone") || userAgent.contains("iPod") || userAgent.contains("iPad")) {
+			try {
+				String webAppURL = WebAppURL.getWebAppURL();
+				response.sendRedirect(webAppURL);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				String webAppURL = WebAppURL.getWebAppURL();
+				response.sendRedirect(webAppURL);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return;
+	}
+	
+	@RequestMapping("/webapp")
+	public void webApp(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String webAppURL = WebAppURL.getWebAppURL();
+			response.sendRedirect(webAppURL);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return;
 	}
 
 }

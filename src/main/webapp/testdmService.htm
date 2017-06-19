@@ -1,0 +1,98 @@
+
+
+<script type ="text/javascript">
+		 var jsonhttp = null ;
+		jsonhttp = new XMLHttpRequest();
+
+		// var getdmurl = "http://114.215.209.102/USee/getdmbytopic";
+		var getdmurl = 'http://useeba.com/USee/getuserdmByInterval';   //   121.42.149.46  114.215.209.102
+
+		jsonhttp.open("POST", getdmurl,false);
+		jsonhttp.setRequestHeader("Content-Type","application/json");
+		
+		// var data = '{"topicid":"1"}';
+		var data = '{"topicID":"2","startTime":"2016-9-10 17:33:52","endTime":"2016-9-23 16:39:12"}';
+		jsonhttp.send(data);
+		result = jsonhttp.responseText;
+		alert(result);
+		ref = eval("("+result+")");
+
+
+function loadData(){
+     var jsonhttp = null ;
+	jsonhttp = new XMLHttpRequest();
+
+		// var getdmurl = "http://114.215.209.102/USee/getdmbytopic";
+	var getdmurl = 'http://121.42.149.46/USee/getuserdmByInterval';   // 
+    jsonhttp.open("POST", getdmurl,false);
+    jsonhttp.setRequestHeader("Content-Type","application/json");
+		
+	var data = '{"topicID":"2","startTime":"2016-9-10 17:33:52","endTime":"2016-9-23 16:39:12"}';
+	jsonhttp.send(data);
+	result = jsonhttp.responseText;
+	alert(result);
+	ref = eval("("+result+")");
+}
+
+		// Send a DM 
+
+		jsonhttp = new XMLHttpRequest();
+		// var getdmurl = "http://114.215.209.102/USee/getdmbytopic";
+		/* var getdmurl = 'http://useeba.com/USee/senddanmu';   //   121.42.149.46  114.215.209.102
+		jsonhttp.open("POST", getdmurl,false);
+		jsonhttp.setRequestHeader("Content-Type","application/json");
+		
+var data = '{"delete_time":"2020-01-01 10:10:10","devid":"866328023315987","isannoymous":false,"lat":"31.917352","lon":"118.786877","messages":"I like this app !","topicid":"273","userid":"D47551C5EFB949839414BE8650330ADC","randomUserIcon":"6_E6A473","randomUserName":"Merry","randomIconId":598,"imgurls":[]}';
+
+		jsonhttp.send(data);
+		result = jsonhttp.responseText;
+		alert(result);
+		ref = eval("("+result+")");   
+		*/
+
+		
+
+		var getdmurl = 'http://121.42.149.46/USee/wxroom/getwxdanmus'  //   121.42.149.46  114.215.209.102
+		jsonhttp.open("POST", getdmurl,false);
+		jsonhttp.setRequestHeader("Content-Type","application/json");
+		
+		var data =  '{" wxRoomId ":3}';
+		jsonhttp.send(data);
+		result = jsonhttp.responseText;
+		
+		// ref = eval("("+result+")");
+		alert(result);
+
+
+		var getdmurl = 'http://www.useeba.com/USee/wx/wxroom/senwxdanmu'  //   121.42.149.46  114.215.209.102
+		jsonhttp.open("POST", getdmurl,false);
+		jsonhttp.setRequestHeader("Content-Type","application/json");
+		
+		var message= encodeURIComponent("USee 第二发");
+		str = "USee 第二发";
+
+		unistr = escape(str).replace(/%u/gi, '\\u');
+		alert(unistr);
+		cnstr = unescape(str).replace(/%u/gi, '\\u')
+		alert(cnstr);
+
+		var data = '{"devId": "1","wxRoomId": 3,"userId": "0A276E3A023848A7BB791BC1957B371F","messages":"'+str+'"}';
+		jsonhttp.send(data);
+		result = jsonhttp.responseText;
+		
+getUserID();
+		// ref = eval("("+result+")");
+		// alert(result);
+	 function getUserID(){
+    	var getUserIDUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd3321fb7bc0c69e5&redirect_uri=http://www.useeba.com/USee/wx/login/base&response_type=code&scope=snsapi_base"
+    	var jsonhttp = null ;
+   		jsonhttp = new XMLHttpRequest();
+       jsonhttp.open("GET", getUserIDUrl,false);
+    	result = jsonhttp.responseText;
+    	alert(result);
+  	}
+</script>
+
+
+
+
